@@ -1,0 +1,28 @@
+package exlcm;
+
+struct cnet_constants_t
+{
+	const int8_t	answerTrue=0,timeout=1,answerFalse=2,crcError=3,answerWrong=4;
+}
+
+struct cnet_crc_constants_t
+{
+	const int8_t noCRC=0, CRC_8 = 1, CRC_16 = 2, CRC_32 = 3, CRC_ccitt_1d0f = 4, CRC_ccitt_ffff = 5, CRC_dnp = 6, CRC_kermit = 7, CRC_modbus = 8, CRC_sick = 9, CRC_xmodem = 10;
+}
+
+
+struct cnet_command_t
+{
+	string		target;
+	string		command;
+	boolean		expect_answer;
+	int16_t		timeout_ms;
+	int8_t		crcType;
+}
+
+struct cnet_answer_t
+{
+	string		answer;
+	boolean		correct;
+	int8_t		error;
+}

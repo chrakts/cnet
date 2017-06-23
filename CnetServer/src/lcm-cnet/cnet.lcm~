@@ -1,0 +1,20 @@
+package exlcm;
+
+struct cnet_constants
+{
+	const int8_t	noerror=0,timeout=1,wrong_answer=2;
+}
+
+struct cnet_command_t
+{
+	string		target;
+	string		command;
+	boolean		expect_answer;
+}
+
+strct cnet_answer_t
+{
+	string		answer;
+	boolean		correct;
+	int8_t			error;
+}

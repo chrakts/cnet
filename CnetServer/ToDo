@@ -1,0 +1,33 @@
+--bei cnet_command_t einen Timeout-Parameter vorsehen
+--im Server muss dieser dann als Server-Timeout eingetragen werden
+--das Python-Script muss länger warten als der Server (Blockade durch andere Anfragen). 
+	--Eigentlich braucht das Python-Script keinen Timeout, da das immer vom Server kommen sollte. 
+	--Was ist, wenn der Server nicht mehr läuft? Dann hängt das PS ewig. 
+	--Irgendwann sollte dann eine Email generiert werden, dass der Server nicht mehr antwortet. 
+	--Auf diese Weise kann man auch ein Dummy-PS laufen lassen, dass nur die Existenz des Servers prüft.
+
+
+6.12.2016: alle oben beschriebenen Punkte sind erledigt  
+mit dem Befehl "ServerIO?" kann ein Script regelmäßig die Existenz des Servers prüfen und gegebenfalls eine Email absetzen.
+
+
+
+Der eigentliche Server
+./CnetServer 
+
+Simulator eines Gerätes:
+python serialsim.py
+
+Ein Testscript, dass Befehl senden kann und Antworten erwartet
+run CNET-send.py --command "text" --target "Sys1" --timeout 100
+Direkte Anfrage an Server, ob vorhanden
+run CNET-send.py --command "ServerIO?" --target "Sys1" --timeout 100
+
+neue Anforderungen:
+CnetServer muss Argumente bekommen
+    - serieller Port erledigt
+    - Baudrate		erledigt
+CnetServer muss mit Anfragen umgehen, die einen CRC-Code dabeihaben
+Alternativ kann er auch selber den CRC-Code erzeugen (nach Aufforderung)
+    -> in chraks Wiki sind Internetseiten zur CRC-Berechnung in C hinterlegt
+
