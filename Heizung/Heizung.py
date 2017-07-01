@@ -12,7 +12,7 @@ from exlcm import cnet_crc_constants_t
 from exlcm import cnet_constants_t
 
 class Heizung(CNET):
-  def __init__(self,node='Z',comPort="", baudRate=57600, backChannel="HEIZUNG", withCrc = cnet_crc_constants_t.noCRC, timeout=1000):
+  def __init__(self,node='Z',comPort="", baudRate=38400, backChannel="HEIZUNG", withCrc = cnet_crc_constants_t.noCRC, timeout=1000):
     super(self.__class__,self).__init__(comPort) #comPort, baudRate, backChannel, withCrc, timeout)
     self.node = node
     
@@ -39,10 +39,10 @@ class Heizung(CNET):
     while(notReady):
       boolAnswer,answer = self.sendCommand(self.node+"TS"+str(i))
       i += 1
-      if boolAnswer != True:
+      if boolAnswer == False:
         notReady = False
       try:
-        int(answer,16)
+        int(answer,16)  # testet nur, ob tatsaechlich eine gueltige Seriennummer uebertragen wurde.
         idList.append(answer)
       except:
         notReady = False
