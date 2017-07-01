@@ -44,7 +44,8 @@ class CNET(object):
       if(self.msganswer.answer[-1]!='.'):
         return(False,self.msganswer.answer[:-1])
       else:
-        return(self.msganswer.error,self.msganswer.answer[:-1])
+        return(True,self.msganswer.answer[:-1])
+ #       return(self.msganswer.error,self.msganswer.answer[:-1])
         
       
    def sendCommandTTY(self,command):
