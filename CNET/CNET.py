@@ -40,11 +40,13 @@ class CNET(object):
       self.msg.crcType = self.crc
       self.msg.timeout_ms = int(self.timeout)
       self.lc.publish("CNET", self.msg.encode())
-      self.subscripe()
-      if(self.msganswer.answer[-1]!='.'):
-        return(False,self.msganswer.answer[:-1])
+      if(self.subscripe()==False):
+        return(False,"Server-Timeout")
       else:
-        return(True,self.msganswer.answer[:-1])
+        if(self.msganswer.answer[-1]!='.'):
+          return(False,self.msganswer.answer[:-1])
+        else:
+          return(True,self.msganswer.answer[:-1])
  #       return(self.msganswer.error,self.msganswer.answer[:-1])
         
       
@@ -117,13 +119,16 @@ class CNET(object):
       self.subscription = self.lc.subscribe(self.backChannel,self.answer_handler)
       try:
          while not self.gotAnswer:
-            self.lc.handle()
+            if(self.lc.handle_timeout(1000)==0):
+              print("Server-Timeout")
+              return(False)
       except KeyboardInterrupt:
          pass   
       if(self.msganswer.error==0):
          pass    # print("Antwort lautet:" + self.msganswer.answer)
       else:
          print("Timeout mit Antwort:" + self.msganswer.answer)
+      return(True)
    def close(self):
       if type(self.interface)!=str:
          self.interface.close()
