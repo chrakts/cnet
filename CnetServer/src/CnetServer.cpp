@@ -51,7 +51,7 @@ int i = 0;
 	}
 }
 
-lcm::LCM cnet_lcm;
+lcm::LCM cnet_lcm("udpm://239.255.76.67:7667?ttl=1");
 exlcm::cnet_command_t cnet_command;
 exlcm::cnet_constants_t cnet_constants;
 exlcm::cnet_crc_constants_t cnet_crc_constants_t;
