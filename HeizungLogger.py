@@ -12,6 +12,7 @@ import smtplib
 import email.utils
 from email.mime.text import MIMEText
 import getpass
+import codecs
 
 def sendEmail(config,fr,to,sub,text):
   # Prompt the user for connection info
@@ -75,7 +76,7 @@ while(1):
   print (filename )
   
   if not(os.path.isfile(filename)):
-    fd = open(filename,"w")
+    fd = codecs.open(filename,"w","utf-8")
     fd.write("Zeit;Uhrzeit;"+str(sensNamenListe)[1:-1].replace(',',';').replace('\'','')+";Stufe1 [s];Stufe 2 [s]\r\n")
     fd.close()
   
