@@ -14,7 +14,7 @@ class CNET(object):
          self.interface = serial.Serial(comPort, 57600, timeout=3)
       else:
          self.interface = backChannel
-         self.lc = lcm.LCM()
+         self.lc = lcm.LCM("udpm://239.255.76.67:7667?ttl=1")
       if withCrc==True:
          self.crc = cnet_crc_constants_t.CRC_xmodem
       else:
