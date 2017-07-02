@@ -15,7 +15,7 @@ parser.add_argument('--directory',help='directory to store data',default="~")
 
 args = parser.parse_args()
 
-myClima = Clima('C',comPort="/dev/ttyUSB0",withCrc=True)
+myClima = Clima('C',withCrc=True)
 
 if not(os.path.isdir(args.directory)):
 	os.mkdir(args.directory)

@@ -42,7 +42,7 @@ class Heizung(CNET):
       if boolAnswer == False:
         notReady = False
       try:
-        int(answer,16)
+        int(answer,16)  # testet nur, ob tatsaechlich eine gueltige Seriennummer uebertragen wurde.
         idList.append(answer)
       except:
         notReady = False

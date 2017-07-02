@@ -52,11 +52,11 @@ class Heizung(CNET):
     boolAnswer,answer = self.sendCommand(self.node+"TT"+str(sensor))
     return( boolAnswer,answer )  	
   	 
-test = Heizung('Z',withCrc=False)
-print( test.getTempSensors() )
-for i in range(0,4):
-  test.getTemperature(i)
-
-print( test.getHeater() )
+#test = Heizung('Z',withCrc=False)
+#print( test.getTempSensors() )
+#for i in range(0,4):
+ # test.getTemperature(i)
+#
+#print( test.getHeater() )
 
 
