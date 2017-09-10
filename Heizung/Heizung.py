@@ -55,8 +55,6 @@ class Heizung(CNET):
 #test = Heizung('Z',withCrc=False)
 #print( test.getTempSensors() )
 #for i in range(0,4):
- # test.getTemperature(i)
+# print test.getTemperature(i)
 #
 #print( test.getHeater() )
-
-

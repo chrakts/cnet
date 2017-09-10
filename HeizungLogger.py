@@ -90,7 +90,6 @@ while(1):
   if (heatm1 < 30) and (heatm1 > 0) and (heatm2 == 0) and (heat1 == 0):
     print("!!!!!!!!!!!!!!!!!!!!! Heater-Error !!!!!!!!!!!!!!!!!!!!!")
     sendEmail(EmailConfig,'zeug','personal',"Fehler in der Heizung","Die Heizung hat einen Fehlerzustand")
-
   
   heatm2 = heatm1
   heatm1 = heat1
