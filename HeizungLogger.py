@@ -53,7 +53,7 @@ parser.add_argument('--directory',help='directory to store data',default="~/cnet
 
 args = parser.parse_args()
 
-myHeizung = Heizung('Z',withCrc=False)
+myHeizung = Heizung('Z',withCrc=False,backChannel="MyHeizung")
 mySensors = sens.Sensors()
 EmailConfig = reader(os.path.expanduser("~/.myinfo.ini"))
 
@@ -64,7 +64,9 @@ if not(os.path.isdir(directory)):
 
 sensIDListe = myHeizung.getTempSensors()[1] 
 sensNamenListe = []
+print sensIDListe
 for n in sensIDListe:
+  print n
   sensNamenListe.append(mySensors.sensors[n])
 print(sensNamenListe)
 
