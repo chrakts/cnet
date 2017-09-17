@@ -15,7 +15,7 @@ parser.add_argument('--directory',help='directory to store data',default="~")
 
 args = parser.parse_args()
 
-myClima = Clima('C',withCrc=True,backChannel="Wurzel")
+myClima = Clima('C',withCrc=True,backChannel="MyClima")
 
 if not(os.path.isdir(args.directory)):
 	os.mkdir(args.directory)
