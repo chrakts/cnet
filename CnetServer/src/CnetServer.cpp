@@ -149,7 +149,7 @@ string answer;
 				cout << "Command #" << cnet_command.command << "# gesendet über RS485" << endl;
 				if(cnet_command.expect_answer)
 				{
-					cout << "Wait for Answer" << endl;
+					cout << "Wait for Answer for " <<  (uint16_t)cnet_command.timeout_ms << " ms" << endl;
 					lcm_answer.error = cnet.Get_Answer(answer,cnet_command.crcType,(uint16_t)cnet_command.timeout_ms);
 					switch( lcm_answer.error ) //cnet.Get_Answer(answer,5)
 					{
@@ -171,6 +171,7 @@ string answer;
 					cout.flush();
 					cnet_lcm.publish(cnet_command.target,&lcm_answer);
 					cout << "Answer " << lcm_answer.answer << " publiziert, Status: "  << endl;
+					cout << "Answer ::" << lcm_answer.answer << ":: an !" << cnet_command.target << "!  publiziert, Status: "  << endl;
 				}
 				cnet.Close();
 
