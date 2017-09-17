@@ -148,7 +148,7 @@ char one_char;
 		}
 		else
 		{
-			sleep(SLEEP_TIME);
+			usleep(SLEEP_TIME);
 			cycles++;
 		}
 		if(command.length() > 1)
@@ -180,22 +180,29 @@ uint16_t maxcycles,cycles=0;
 char one_char;
 size_t start;
 	answer.clear();
-	maxcycles = (uint16_t)(((double)timeout) / (SLEEP_TIME/1000000) );
+	maxcycles = (uint16_t)(((double)timeout) / (SLEEP_TIME/1000) );
 	while(this->IsDataAvailable()==false)
 	{
 		usleep(SLEEP_TIME);
 		cycles++;
 		if(cycles > maxcycles)
+		{
+      cout << "!!!!Timeout: "<<cycles << " von " << maxcycles << " erreicht" << endl;
 			return( cnet_constants.timeout );
+		}
 	}
 	while( 1 )
 	{
 		if( (cycles > maxcycles) | (answer.length()>1024) )
+		{
+    	cout << "---->!!!!Timeout: " <<cycles << " von " << maxcycles << " erreicht" << endl;
 			return( cnet_constants.timeout );
+		}
 		if( this->IsDataAvailable() )
 		{
 			try
 			{
+//			  cout << "Read Character " << answer.length() << endl;
 				one_char = this->ReadByte(timeout);
 			}
 			catch(...)
@@ -207,7 +214,8 @@ size_t start;
 		}
 		else
 		{
-			sleep(SLEEP_TIME);
+//			cout << "Sleep for " << SLEEP_TIME << " us" << endl;
+			usleep(SLEEP_TIME);
 			cycles++;
 		}
 		if(answer.length() > 1)
@@ -245,17 +253,17 @@ size_t start;
 				size_t ende;
 				string   answerCrc;
 				ende = answer.rfind(">",answer.npos);
-				cout << "test 0" << endl;
+//				cout << "test 0" << endl;
 				if( ende < answer.npos )
 				{
 					start = answer.rfind("<",answer.npos);
-					cout << "test 1 " << start << " " << ende << " " << answer.npos << endl;
+//					cout << "test 1 " << start << " " << ende << " " << answer.npos << endl;
 					if( (start < answer.npos) && ( (answer[ende-5]=='.') || (answer[ende-5]=='!') ) )
 					{
 						answerCrc =  answer.substr(ende-4,4);
-						cout << "test 2" << endl;
+//						cout << "test 2" << endl;
 						answer = answer.substr(start+1,answer.length()-6-start);
-						cout << "test 3" << endl;
+//						cout << "test 3" << endl;
 						cout << "CRC: " << answerCrc << " Antwort: " << answer << endl;
 						unsigned int crcInt,crc16;
 						std::stringstream crcSS;
