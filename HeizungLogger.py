@@ -27,7 +27,7 @@ def sendEmail(config,fr,to,sub,text):
   msg['To'] = email.utils.formataddr(('Recipient', to_email))
   msg['From'] = email.utils.formataddr(('Heizung', 'zeug@cmja.de'))
   msg['Subject'] = sub
-
+              
   server = smtplib.SMTP(servername)
   try:
       server.set_debuglevel(True)
@@ -70,32 +70,38 @@ print(sensNamenListe)
 
 heatm2 = 0
 heatm1 = 0
-
+sendEmail(EmailConfig,'zeug','personal',"Heizungsueberwachung gestartet","Die Heizung wird ab jetzt ueberwacht.")
 while(1):
-  filename = directory+'/'+str(datetime.datetime.now().date())+'_'+args.filename+'.log'
-  print (filename )
-  
-  if not(os.path.isfile(filename)):
-    fd = codecs.open(filename,"w","utf-8")
-    fd.write("Zeit;Uhrzeit;"+str(sensNamenListe)[1:-1].replace(',',';').replace('\'','')+";Stufe1 [s];Stufe 2 [s]\r\n")
+  try:
+    filename = directory+'/'+str(datetime.datetime.now().date())+'_'+args.filename+'.log'
+    print (filename )
+    
+    if not(os.path.isfile(filename)):
+      fd = codecs.open(filename,"w","utf-8")
+      fd.write("Zeit;Uhrzeit;"+str(sensNamenListe)[1:-1].replace(',',';').replace('\'','')+";Stufe1 [s];Stufe 2 [s]\r\n")
+      fd.close()
+    
+    actualTime = datetime.datetime.now()
+    timeString = str(actualTime.time().hour)+':'+str(actualTime.time().minute)+':'+str(actualTime.time().second)
+    tListe = []
+    for i in range(0,len(sensNamenListe)):
+      actualTemp = myHeizung.getTemperature(i)
+      print(str(i)+": "+str(actualTemp))
+      tListe.append(  int(actualTemp[1])/2.0  )
+    print (tListe)
+    actHeat = myHeizung.getHeater()
+    [res,heat1,heat2] = actHeat
+    if (heatm1 < 30) and (heatm1 > 0) and (heatm2 == 0) and (heat1 == 0):
+      print("!!!!!!!!!!!!!!!!!!!!! Heater-Error !!!!!!!!!!!!!!!!!!!!!")
+      sendEmail(EmailConfig,'zeug','personal',"Fehler in der Heizung","Die Heizung hat einen Fehlerzustand")
+    
+    heatm2 = heatm1
+    heatm1 = heat1
+    
+    fd = open(filename,"a+")
+    fd.write(actualTime.isoformat()+';'+timeString+';'+str(tListe)[1:-1].replace(',',';').replace(' ','') +';'+ str(heat1) +';'+ str(heat2)  +"\r\n")
     fd.close()
-  
-  actualTime = datetime.datetime.now()
-  timeString = str(actualTime.time().hour)+':'+str(actualTime.time().minute)+':'+str(actualTime.time().second)
-  tListe = []
-  for i in range(0,len(sensNamenListe)):
-    tListe.append(  int(myHeizung.getTemperature(i)[1])/2.0  )
-  print (tListe)
-  res,heat1,heat2 = myHeizung.getHeater()
-  if (heatm1 < 30) and (heatm1 > 0) and (heatm2 == 0) and (heat1 == 0):
-    print("!!!!!!!!!!!!!!!!!!!!! Heater-Error !!!!!!!!!!!!!!!!!!!!!")
-    sendEmail(EmailConfig,'zeug','personal',"Fehler in der Heizung","Die Heizung hat einen Fehlerzustand")
-  
-  heatm2 = heatm1
-  heatm1 = heat1
-  
-  fd = open(filename,"a+")
-  fd.write(actualTime.isoformat()+';'+timeString+';'+str(tListe)[1:-1].replace(',',';').replace(' ','') +';'+ str(heat1) +';'+ str(heat2)  +"\r\n")
-  fd.close()
-  time.sleep(int(args.timestep))
-  
+    time.sleep(int(args.timestep))
+  except: 
+    print("Fehler aufgetreten !!!\n")
+    
