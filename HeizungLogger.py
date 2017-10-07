@@ -13,9 +13,12 @@ import email.utils
 from email.mime.text import MIMEText
 import getpass
 import codecs
+import sys
+
 
 def sendEmail(config,fr,to,sub,text):
   # Prompt the user for connection info
+
   to_email = config[to]['user']
   servername = config[fr]['server']
   username = config[fr]['user']
@@ -45,7 +48,7 @@ def sendEmail(config,fr,to,sub,text):
   finally:
       server.quit()
 
-
+#sys.stdout = open('HeizungAusgabeLogger.log', 'w')
 parser = argparse.ArgumentParser(description='HeizungLogger.')
 parser.add_argument('--timestep',help='Time between to Logs in seconds',default=5)
 parser.add_argument('--filename',help='last part of filename',default="HeizungLog")
@@ -64,17 +67,21 @@ if not(os.path.isdir(directory)):
 
 sensIDListe = myHeizung.getTempSensors()[1] 
 sensNamenListe = []
-print sensIDListe
+print(sensIDListe)
 for n in sensIDListe:
-  print n
+  print(n)
   sensNamenListe.append(mySensors.sensors[n])
 print(sensNamenListe)
 
 heatm2 = 0
 heatm1 = 0
-sendEmail(EmailConfig,'zeug','personal',"Heizungsueberwachung gestartet","Die Heizung wird ab jetzt ueberwacht.")
+try:
+  sendEmail(EmailConfig,'zeug','personal',"Heizungsueberwachung gestartet","Die Heizung wird ab jetzt ueberwacht.")
+except:
+  pass
 while(1):
   try:
+#    myHeizung = Heizung('Z',withCrc=False,backChannel="MyHeizung")
     filename = directory+'/'+str(datetime.datetime.now().date())+'_'+args.filename+'.log'
     print (filename )
     
@@ -92,7 +99,7 @@ while(1):
       tListe.append(  int(actualTemp[1])/2.0  )
     print (tListe)
     actHeat = myHeizung.getHeater()
-    [res,heat1,heat2] = actHeat
+    [res,heat2,heat1] = actHeat
     if (heatm1 < 30) and (heatm1 > 0) and (heatm2 == 0) and (heat1 == 0):
       print("!!!!!!!!!!!!!!!!!!!!! Heater-Error !!!!!!!!!!!!!!!!!!!!!")
       sendEmail(EmailConfig,'zeug','personal',"Fehler in der Heizung","Die Heizung hat einen Fehlerzustand")

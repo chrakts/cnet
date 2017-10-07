@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 
 import sys, os
+import time
 
 path = os.getcwd() 
 path0 = os.path.split(path)[0] # up one directory
@@ -20,7 +21,7 @@ FANON2 = '2'
 FANAUTO= 'A'
 
 class Badeklima(CNET):
-  def __init__(self,node='B',comPort="", baudRate=38400, backChannel="BADEKLIMA", withCrc = cnet_crc_constants_t.noCRC, timeout=1000):
+  def __init__(self,node='B',comPort="", baudRate=38400, backChannel="BADEKLIMA", withCrc = cnet_crc_constants_t.noCRC, timeout=5000):
     super(self.__class__,self).__init__(comPort) #comPort, baudRate, backChannel, withCrc, timeout)
     self.node = node
     
@@ -88,12 +89,10 @@ class Badeklima(CNET):
     return( self.sendCommand(self.node+"P"+status) )
   
   def setHeizungOff(self):
-    print("Achtung - ergibt immer Timeout, da Gerät keine Antwort vorsieht")
-    return( self.sendCommand(self.node+"SC") )
+    return( self.sendCommand(self.node+"SC",False) )
   
   def setHeizungOn(self):
-    print("Achtung - ergibt immer Timeout, da Gerät keine Antwort vorsieht")
-    return( self.sendCommand(self.node+"SH") )
+    return( self.sendCommand(self.node+"SH",False) )
   
   def setHeizung(self,status):
     if status == 0:
@@ -108,10 +107,18 @@ class Badeklima(CNET):
   def getSollStatus(self):
     return( self.sendCommand(self.node+"GS") )
   	 
-test = Badeklima('B',withCrc=False)
-print( test.setLuefterOn1() )
-print( test.setLuefterOn2() )
-print( test.setHeizung(0) )
-print( test.getIstStatus() )
-print( test.getSollStatus() )
+#test = Badeklima('B',withCrc=False,timeout=5000)
+#print( test.setLuefterOn1() )
+#print( test.setLuefterOn2() )
+#print( test.setHeizung(0) )
+#toggle = 0
+#while(1):
+#  print( test.getIstStatus() )
+#  print( test.getSollStatus() )
+#  print( test.setHeizung(toggle) )
+#  if toggle == 0:
+#      toggle = 1
+#  else:
+#    toggle = 0
+#  time.sleep(3)
 

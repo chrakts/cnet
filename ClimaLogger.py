@@ -6,8 +6,9 @@ from Clima.Clima import *
 import os
 import time
 import dateutil.parser
+import sys
 
-
+#sys.stdout = open('ClimaAusgabeLogger.log', 'w')
 parser = argparse.ArgumentParser(description='ClimaLogger.')
 parser.add_argument('--timestep',help='Time between to Logs in seconds',default=5)
 parser.add_argument('--filename',help='last part of filename',default="ClimaLog")
@@ -15,7 +16,7 @@ parser.add_argument('--directory',help='directory to store data',default="~")
 
 args = parser.parse_args()
 
-myClima = Clima('C',withCrc=True,backChannel="MyClima")
+myClima = Clima('C',withCrc=False,backChannel="MyClima")
 
 if not(os.path.isdir(args.directory)):
 	os.mkdir(args.directory)

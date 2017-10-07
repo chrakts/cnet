@@ -15,6 +15,7 @@ class CNET(object):
       else:
          self.interface = backChannel
          self.lc = lcm.LCM("udpm://239.255.76.67:7667?ttl=1")
+         self.subscription = self.lc.subscribe(backChannel,self.answer_handler)
       if withCrc==True:
          self.crc = cnet_crc_constants_t.CRC_xmodem
       else:
@@ -25,30 +26,35 @@ class CNET(object):
       self.gotAnswer = False
       self.subscription = None
    
-   def sendCommand(self,command):
+   def sendCommand(self,command,expectAnswer = False):
       if type(self.interface)==str:
-         boolAnswer,answer = self.sendCommandServer(command)
+         boolAnswer,answer = self.sendCommandServer(command,expectAnswer)
       else:
-         boolAnswer,answer = self.sendCommandTTY(command)
+         boolAnswer,answer = self.sendCommandTTY(command,expectAnswer)
       return(boolAnswer,answer)
             
-   def sendCommandServer(self,command):
+   def sendCommandServer(self,command,expectAnswer = False):
       self.msg = cnet_command_t()
       self.msg.command = command
       self.msg.target = self.backChannel
-      self.msg.expect_answer = True
+      self.msg.expect_answer = expectAnswer
       self.msg.crcType = self.crc
       self.msg.timeout_ms = int(self.timeout)
       self.lc.publish("CNET", self.msg.encode())
-      self.subscripe()
-      if(self.msganswer.answer[-1]!='.'):
-        return(False,self.msganswer.answer[:-1])
+      if(expectAnswer==True):
+        if(self.subscripe()==False):
+          return(False,"Server-Timeout")
+        else:
+          if(self.msganswer.answer[-1]!='.'):
+            return(False,self.msganswer.answer[:-1])
+          else:
+            return(True,self.msganswer.answer[:-1])
       else:
-        return(True,self.msganswer.answer[:-1])
- #       return(self.msganswer.error,self.msganswer.answer[:-1])
+        return(True,"CNET: no answer, as expected")
+     #       return(self.msganswer.error,self.msganswer.answer[:-1])
         
       
-   def sendCommandTTY(self,command):
+   def sendCommandTTY(self,command,expectAnswer = False):
       crcstring =  ("%04x" % (CRCCCITT().calculate(command)))  # ************************
       if self.crc != cnet_crc_constants_t.noCRC:
          self.outputTTY("\\>"+command+"<"+crcstring+"\\")
@@ -114,16 +120,19 @@ class CNET(object):
       
    def subscripe(self):
       self.gotAnswer = False
-      self.subscription = self.lc.subscribe(self.backChannel,self.answer_handler)
+#     self.subscription = self.lc.subscribe(self.backChannel,self.answer_handler)
       try:
          while not self.gotAnswer:
-            self.lc.handle()
+            if(self.lc.handle_timeout(self.timeout )==0):
+              print("CNET: Server-Timeout,eingestelltes Timeout: "+str(self.timeout ))
+              return(False)
       except KeyboardInterrupt:
          pass   
       if(self.msganswer.error==0):
-         pass    # print("Antwort lautet:" + self.msganswer.answer)
+         print("Antwort lautet:" + self.msganswer.answer)
       else:
-         print("Timeout mit Antwort:" + self.msganswer.answer)
+         print("CNET: Timeout mit Antwort:" + self.msganswer.answer)
+      return(True)
    def close(self):
       if type(self.interface)!=str:
          self.interface.close()

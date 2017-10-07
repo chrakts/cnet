@@ -12,7 +12,7 @@ from exlcm import cnet_crc_constants_t
 from exlcm import cnet_constants_t
 
 class Heizung(CNET):
-  def __init__(self,node='Z',comPort="", baudRate=38400, backChannel="HEIZUNG", withCrc = cnet_crc_constants_t.noCRC, timeout=3000):
+  def __init__(self,node='Z',comPort="", baudRate=38400, backChannel="HEIZUNG", withCrc = cnet_crc_constants_t.noCRC, timeout=5000):
     super(self.__class__,self).__init__(comPort, baudRate, backChannel, withCrc, timeout)
     self.node = node
     
