@@ -326,3 +326,18 @@ uint8_t CNET::Send_Command(string command,int16_t crc)
 	else
 		return(false);
 }
+
+uint8_t CNET::Flush()
+{
+char one_char;
+	if(this->IsOpen())
+	{
+    while(this->IsDataAvailable()==true)
+    {
+      one_char = this->ReadByte(100);
+    }
+		return(true);
+	}
+	else
+		return(false);
+}

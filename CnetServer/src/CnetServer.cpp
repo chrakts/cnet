@@ -145,6 +145,7 @@ string answer;
 			else
 			{
 				cnet.Open(convertBaudrate(baudRate),SerialPort::CHAR_SIZE_8,SerialPort::PARITY_NONE,SerialPort::STOP_BITS_1,SerialPort::FLOW_CONTROL_NONE);
+        cnet.Flush();
 				cnet.Send_Command(cnet_command.command,cnet_command.crcType);
 				cout << "Command #" << cnet_command.command << "# gesendet über RS485" << endl;
 				if(cnet_command.expect_answer)

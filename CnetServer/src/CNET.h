@@ -39,6 +39,7 @@ class CNET: public SerialPort
 		uint8_t Get_Command(string & command, uint16_t timeout);
 		uint8_t Get_Answer(string & answer,int16_t crc, uint16_t timeout);
 		uint8_t Send_Command(string command,int16_t crc);
+		uint8_t Flush();
 
 };
 
