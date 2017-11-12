@@ -5,7 +5,7 @@ import datetime
 from Heizung.Heizung import *
 import os
 import time
-import dateutil.parser
+#import dateutil.parser
 import Sensoren as sens
 from inireader import reader
 import smtplib

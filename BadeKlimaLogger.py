@@ -5,7 +5,7 @@ import datetime
 from Badeklima.Badeklima import *
 import os
 import time
-import dateutil.parser
+#import dateutil.parser
 import sys
 
 parser = argparse.ArgumentParser(description='BadeKlima-Logger.')

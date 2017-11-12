@@ -5,7 +5,7 @@ import datetime
 from Clima.Clima import *
 import os
 import time
-import dateutil.parser
+#import dateutil.parser
 import sys
 
 #sys.stdout = open('ClimaAusgabeLogger.log', 'w')
