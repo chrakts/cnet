@@ -45,10 +45,13 @@ class CNET(object):
         if(self.subscripe()==False):
           return(False,"Server-Timeout")
         else:
-          if(self.msganswer.answer[-1]!='.'):
-            return(False,self.msganswer.answer[:-1])
+          if(self.msganswer.command_origin!=command):
+            return(False,"Falsche Quelle !")
           else:
-            return(True,self.msganswer.answer[:-1])
+            if(self.msganswer.answer[-1]!='.'):
+              return(False,self.msganswer.answer[:-1])
+            else:
+              return(True,self.msganswer.answer[:-1])
       else:
         return(True,"CNET: no answer, as expected")
      #       return(self.msganswer.error,self.msganswer.answer[:-1])

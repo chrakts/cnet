@@ -10,10 +10,11 @@ except ImportError:
 import struct
 
 class cnet_answer_t(object):
-    __slots__ = ["answer", "correct", "error"]
+    __slots__ = ["answer", "command_origin", "correct", "error"]
 
     def __init__(self):
         self.answer = ""
+        self.command_origin = ""
         self.correct = False
         self.error = 0
 
@@ -27,6 +28,10 @@ class cnet_answer_t(object):
         __answer_encoded = self.answer.encode('utf-8')
         buf.write(struct.pack('>I', len(__answer_encoded)+1))
         buf.write(__answer_encoded)
+        buf.write(b"\0")
+        __command_origin_encoded = self.command_origin.encode('utf-8')
+        buf.write(struct.pack('>I', len(__command_origin_encoded)+1))
+        buf.write(__command_origin_encoded)
         buf.write(b"\0")
         buf.write(struct.pack(">bb", self.correct, self.error))
 
@@ -44,6 +49,8 @@ class cnet_answer_t(object):
         self = cnet_answer_t()
         __answer_len = struct.unpack('>I', buf.read(4))[0]
         self.answer = buf.read(__answer_len)[:-1].decode('utf-8', 'replace')
+        __command_origin_len = struct.unpack('>I', buf.read(4))[0]
+        self.command_origin = buf.read(__command_origin_len)[:-1].decode('utf-8', 'replace')
         self.correct = bool(struct.unpack('b', buf.read(1))[0])
         self.error = struct.unpack(">b", buf.read(1))[0]
         return self
@@ -52,7 +59,7 @@ class cnet_answer_t(object):
     _hash = None
     def _get_hash_recursive(parents):
         if cnet_answer_t in parents: return 0
-        tmphash = (0xc2a3f0f10b3b1028) & 0xffffffffffffffff
+        tmphash = (0x10502e133e8e7777) & 0xffffffffffffffff
         tmphash  = (((tmphash<<1)&0xffffffffffffffff)  + (tmphash>>63)) & 0xffffffffffffffff
         return tmphash
     _get_hash_recursive = staticmethod(_get_hash_recursive)

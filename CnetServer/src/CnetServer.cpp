@@ -152,6 +152,7 @@ string answer;
 				{
 					cout << "Wait for Answer for " <<  (uint16_t)cnet_command.timeout_ms << " ms" << endl;
 					lcm_answer.error = cnet.Get_Answer(answer,cnet_command.crcType,(uint16_t)cnet_command.timeout_ms);
+          lcm_answer.command_origin = command;
 					switch( lcm_answer.error ) //cnet.Get_Answer(answer,5)
 					{
 						case cnet_constants.answerTrue:

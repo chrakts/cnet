@@ -23,6 +23,7 @@ struct cnet_command_t
 struct cnet_answer_t
 {
 	string		answer;
+  string    command_origin;
 	boolean		correct;
 	int8_t		error;
 }

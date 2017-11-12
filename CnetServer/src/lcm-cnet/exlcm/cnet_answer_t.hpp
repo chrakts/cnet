@@ -19,6 +19,8 @@ class cnet_answer_t
     public:
         std::string answer;
 
+        std::string command_origin;
+
         int8_t     correct;
 
         int8_t     error;
@@ -123,6 +125,10 @@ int cnet_answer_t::_encodeNoHash(void *buf, int offset, int maxlen) const
     tlen = __string_encode_array(buf, offset + pos, maxlen - pos, &answer_cstr, 1);
     if(tlen < 0) return tlen; else pos += tlen;
 
+    char* command_origin_cstr = (char*) this->command_origin.c_str();
+    tlen = __string_encode_array(buf, offset + pos, maxlen - pos, &command_origin_cstr, 1);
+    if(tlen < 0) return tlen; else pos += tlen;
+
     tlen = __boolean_encode_array(buf, offset + pos, maxlen - pos, &this->correct, 1);
     if(tlen < 0) return tlen; else pos += tlen;
 
@@ -143,6 +149,13 @@ int cnet_answer_t::_decodeNoHash(const void *buf, int offset, int maxlen)
     this->answer.assign(((const char*)buf) + offset + pos, __answer_len__ - 1);
     pos += __answer_len__;
 
+    int32_t __command_origin_len__;
+    tlen = __int32_t_decode_array(buf, offset + pos, maxlen - pos, &__command_origin_len__, 1);
+    if(tlen < 0) return tlen; else pos += tlen;
+    if(__command_origin_len__ > maxlen - pos) return -1;
+    this->command_origin.assign(((const char*)buf) + offset + pos, __command_origin_len__ - 1);
+    pos += __command_origin_len__;
+
     tlen = __boolean_decode_array(buf, offset + pos, maxlen - pos, &this->correct, 1);
     if(tlen < 0) return tlen; else pos += tlen;
 
@@ -156,6 +169,7 @@ int cnet_answer_t::_getEncodedSizeNoHash() const
 {
     int enc_size = 0;
     enc_size += this->answer.size() + 4 + 1;
+    enc_size += this->command_origin.size() + 4 + 1;
     enc_size += __boolean_encoded_array_size(NULL, 1);
     enc_size += __int8_t_encoded_array_size(NULL, 1);
     return enc_size;
@@ -163,7 +177,7 @@ int cnet_answer_t::_getEncodedSizeNoHash() const
 
 uint64_t cnet_answer_t::_computeHash(const __lcm_hash_ptr *)
 {
-    uint64_t hash = 0xc2a3f0f10b3b1028LL;
+    uint64_t hash = 0x10502e133e8e7777LL;
     return (hash<<1) + ((hash>>63)&1);
 }
 
