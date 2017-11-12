@@ -22,7 +22,7 @@ FANAUTO= 'A'
 
 class Badeklima(CNET):
   def __init__(self,node='B',comPort="", baudRate=38400, backChannel="BADEKLIMA", withCrc = cnet_crc_constants_t.noCRC, timeout=7000):
-    super(self.__class__,self).__init__(comPort) #comPort, baudRate, backChannel, withCrc, timeout)
+    super(self.__class__,self).__init__(comPort, baudRate, backChannel, withCrc, timeout)
     self.node = node
     
   def setTemperature(self,T):
