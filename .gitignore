@@ -4,3 +4,7 @@ __pycache__/
 *.py~
 *.a
 
+
+CnetServer/src/CnetServer_old
+
+CnetServer/src/CnetServer
